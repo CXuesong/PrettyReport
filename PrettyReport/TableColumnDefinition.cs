@@ -15,8 +15,8 @@ namespace Undefined.PrettyReport
 
     public enum OverflowBehavior
     {
-        Truncate,
-        TruncateWithEllipsis,
+        Clip,
+        ClipWithEllipsis,
         //Wrap
     }
 
@@ -26,15 +26,19 @@ namespace Undefined.PrettyReport
     /// </summary>
     public struct TableColumnDefinition
     {
-        public TableColumnDefinition(string title, int width) : this(title, null, width, TextAlignment.Left, OverflowBehavior.Truncate)
+        public TableColumnDefinition(string title, int width) : this(title, null, width, TextAlignment.Left, OverflowBehavior.Clip)
         {
         }
 
-        public TableColumnDefinition(string title, string format, int width) : this(title, format, width, TextAlignment.Left, OverflowBehavior.Truncate)
+        public TableColumnDefinition(string title, string format, int width) : this(title, format, width, TextAlignment.Left, OverflowBehavior.Clip)
         {
         }
 
-        public TableColumnDefinition(string title, string format, int width, TextAlignment textAlignment) : this(title, format, width, textAlignment, OverflowBehavior.Truncate)
+        public TableColumnDefinition(string title, int width, TextAlignment textAlignment) : this(title, null, width, textAlignment, OverflowBehavior.Clip)
+        {
+        }
+
+        public TableColumnDefinition(string title, string format, int width, TextAlignment textAlignment) : this(title, format, width, textAlignment, OverflowBehavior.Clip)
         {
         }
 

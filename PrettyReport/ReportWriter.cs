@@ -7,19 +7,46 @@ using System.Threading.Tasks;
 namespace Undefined.PrettyReport
 {
     /// <summary>
+    /// 预定义的段落格式。
+    /// Pre-defined paragraph styles.
+    /// </summary>
+    public enum ParagraphStyle
+    {
+        
+    }
+    /// <summary>
     /// 提供了基本的报表输出方式。
     /// Provides basic interfaces for writing a report.
     /// </summary>
-    public abstract class ReportWriter
+    public abstract class ReportWriter : IDisposable
     {
         public abstract void WriteLine(string s);
 
-        public abstract void WriteLine(params string[] cells);
+        public virtual void WriteLine(string format, object arg0)
+            => WriteLine(string.Format(format, arg0));
 
-        public abstract void BeginTable(TableColumnDefinition[] cols);
+        public virtual void WriteLine(string format, params object[] args)
+            => WriteLine(string.Format(format, args));
+
+        public void BeginTable(TableColumnDefinition[] cols) => BeginTable(2, cols);
+
+        public abstract void BeginTable(int columnSpacing, TableColumnDefinition[] cols);
+
+        public abstract void WriteRow(params object[] cells);
 
         public abstract void EndTable();
 
         public abstract void WriteHorizontalLine();
+
+        public virtual void Dispose()
+        {
+            
+        }
+
+        /// <summary>
+        /// 左缩进。
+        /// </summary>
+        public int LeftIndention { get; set; }
+
     }
 }
