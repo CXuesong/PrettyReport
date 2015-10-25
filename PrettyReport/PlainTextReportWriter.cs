@@ -14,11 +14,21 @@ namespace Undefined.PrettyReport
     public class PlainTextReportWriter : ReportWriter
     {
         private bool needDisposeWriter = false;
-        private string indensionText = string.Empty;
+        private string _IndensionText = string.Empty;
         //private int _TabSite;
         //private string tabReplacementText;
 
         public TextWriter Writer { get; }
+
+        private string IndensionText
+        {
+            get
+            {
+                if (LeftIndention != _IndensionText.Length)
+                    _IndensionText = new string(' ', LeftIndention);
+                return _IndensionText;
+            }
+        }
 
         ///// <summary>
         ///// 制表符的字符宽度。
@@ -36,9 +46,8 @@ namespace Undefined.PrettyReport
 
         public override void WriteLine(string s)
         {
-            if (LeftIndention != indensionText.Length)
-                indensionText = new string(' ', LeftIndention);
-            Writer.WriteLine(indensionText + s);
+            Writer.Write(IndensionText);
+            Writer.WriteLine(s);
         }
 
         #region Table
@@ -48,7 +57,7 @@ namespace Undefined.PrettyReport
         public override void WriteRow(params object[] cells)
         {
             if (currentTable == null) throw new InvalidOperationException("Currently not in a table.");
-            Writer.Write(indensionText);
+            Writer.Write(IndensionText);
             var maxCells = Math.Min(currentTable.Length, cells.Length);
             for (var i = 0; i < maxCells; i++)
             {
@@ -69,14 +78,14 @@ namespace Undefined.PrettyReport
             Writer.WriteLine();
         }
 
-        public override void BeginTable(int columnSpacing, TableColumnDefinition[] cols)
+        public override void BeginTable(int columnSpacing, params TableColumnDefinition[] cols)
         {
             if (cols == null) throw new ArgumentNullException(nameof(cols));
             if (currentTable != null) throw new InvalidOperationException("Embeded table is not supported.");
             currentTable = cols;
             columnSpacingString = new string(' ', columnSpacing);
             //Headers
-            Writer.Write(indensionText);
+            Writer.Write(IndensionText);
             foreach (var col in cols)
             {
                 Writer.Write(PadClipText(col.Title, col.Width, col.TextAlignment,
@@ -84,6 +93,7 @@ namespace Undefined.PrettyReport
                 Writer.Write(columnSpacingString);
             }
             Writer.WriteLine();
+            Writer.Write(IndensionText);
             foreach (var col in cols)
             {
                 Writer.Write(new string('-', col.Width));

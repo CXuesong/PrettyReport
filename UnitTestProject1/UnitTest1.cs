@@ -19,6 +19,7 @@ namespace UnitTestProject1
                 rw.WriteLine("华文卓越 AaBbCc");
                 rw.WriteLine("华文卓越 AaBbCc");
                 rw.WriteHorizontalLine();
+                rw.LeftIndention = 4;
                 rw.BeginTable(new[]
                 {
                     new TableColumnDefinition("File Name", 20),

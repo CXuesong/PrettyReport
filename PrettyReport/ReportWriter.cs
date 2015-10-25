@@ -22,15 +22,18 @@ namespace Undefined.PrettyReport
     {
         public abstract void WriteLine(string s);
 
+        public virtual void WriteLine()
+            => WriteLine(null);
+
         public virtual void WriteLine(string format, object arg0)
             => WriteLine(string.Format(format, arg0));
 
         public virtual void WriteLine(string format, params object[] args)
             => WriteLine(string.Format(format, args));
 
-        public void BeginTable(TableColumnDefinition[] cols) => BeginTable(2, cols);
-
-        public abstract void BeginTable(int columnSpacing, TableColumnDefinition[] cols);
+        public void BeginTable(params TableColumnDefinition[] cols) => BeginTable(2, cols);
+        
+        public abstract void BeginTable(int columnSpacing, params TableColumnDefinition[] cols);
 
         public abstract void WriteRow(params object[] cells);
 
