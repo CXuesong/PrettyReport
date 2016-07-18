@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,10 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcelReportWriter.cs" />
     <Compile Include="PlainTextReportWriter.cs" />
     <Compile Include="ReportWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableColumnDefinition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpreadsheetLightX25\SpreadsheetLightX25.csproj">
+      <Project>{4cd2580e-6147-4430-867c-e9fc03a8c0e6}</Project>
+      <Name>SpreadsheetLightX25</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

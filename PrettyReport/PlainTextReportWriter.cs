@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,12 +21,17 @@ namespace Undefined.PrettyReport
 
         public TextWriter Writer { get; }
 
+        /// <summary>
+        /// Determines the width per indension.
+        /// </summary>
+        public int IndensionSize { get; set; } = 4;
+
         private string IndensionText
         {
             get
             {
-                if (LeftIndention != _IndensionText.Length)
-                    _IndensionText = new string(' ', LeftIndention);
+                if (LeftIndention*IndensionSize != _IndensionText.Length)
+                    _IndensionText = new string(' ', LeftIndention*IndensionSize);
                 return _IndensionText;
             }
         }
@@ -54,26 +60,27 @@ namespace Undefined.PrettyReport
         private TableColumnDefinition[] currentTable;
         private string columnSpacingString;
 
-        public override void WriteRow(params object[] cells)
+        public override void WriteRow(IEnumerable cells)
         {
             if (currentTable == null) throw new InvalidOperationException("Currently not in a table.");
             Writer.Write(IndensionText);
-            var maxCells = Math.Min(currentTable.Length, cells.Length);
-            for (var i = 0; i < maxCells; i++)
+            var i = 0;
+            foreach (var cell in cells)
             {
-                var cellStr = cells[i] == null ? string.Empty : cells[i] as string;
+                var cellStr = cell == null ? string.Empty : cell as string;
                 if (cellStr != null) goto WRITE;
-                var ifmt = cells[i] as IFormattable;
+                var ifmt = cell as IFormattable;
                 if (ifmt != null)
                 {
                     cellStr = ifmt.ToString(currentTable[i].Format, null);
                     goto WRITE;
                 }
-                cellStr = cells[i].ToString();
+                cellStr = cell.ToString();
                 WRITE:
                 Writer.Write(PadClipText(cellStr, currentTable[i].Width, currentTable[i].TextAlignment,
                     currentTable[i].OverflowBehavior == OverflowBehavior.ClipWithEllipsis));
                 Writer.Write(columnSpacingString);
+                i++;
             }
             Writer.WriteLine();
         }

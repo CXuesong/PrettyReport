@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,11 +36,38 @@ namespace Undefined.PrettyReport
         
         public abstract void BeginTable(int columnSpacing, params TableColumnDefinition[] cols);
 
-        public abstract void WriteRow(params object[] cells);
+        public virtual void WriteRow(params object[] cells)
+        {
+            WriteRow((IEnumerable) cells);
+        }
+
+        public abstract void WriteRow(IEnumerable cells);
 
         public abstract void EndTable();
 
         public abstract void WriteHorizontalLine();
+
+        public virtual void WriteHeader(string headerText, int headerLevel)
+        {
+            WriteLine();
+            switch (headerLevel)
+            {
+                case 0:
+                    WriteHorizontalLine();
+                    WriteLine(headerText);
+                    WriteHorizontalLine();
+                    break;
+                case 1:
+                    WriteLine(headerText);
+                    WriteHorizontalLine();
+                    break;
+                default:
+                    WriteLine(headerText);
+                    break;
+            }
+        }
+
+        public void WriteHeader(string headerText) => WriteHeader(headerText, 0);
 
         public virtual void Dispose()
         {
